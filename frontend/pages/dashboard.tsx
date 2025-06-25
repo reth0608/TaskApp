@@ -74,7 +74,7 @@ export default function Dashboard() {
       setTasks(updatedTasks);
       setGrouped(groupTasks(updatedTasks));
 
-      await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+      await fetch(`https://taskapp-zlu2.onrender.com/api/tasks/${taskId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ completed: !currentStatus }),
@@ -87,6 +87,25 @@ export default function Dashboard() {
   return (
     <main className="min-h-screen bg-zinc-900 text-white p-6">
       <h1 className="text-3xl font-extrabold mb-8 text-center">Your Tasks</h1>
+      {/* Overall Progress Bar */}
+{tasks.length > 0 && (
+  <div className="max-w-2xl mx-auto mb-8">
+    <div className="text-sm text-white/70 mb-1 text-center">
+      {tasks.filter((t) => t.completed).length} of {tasks.length} total tasks completed
+    </div>
+    <div className="w-full h-3 bg-white/20 rounded overflow-hidden">
+      <div
+        className="h-full bg-green-500 transition-all duration-300"
+        style={{
+          width: `${Math.round(
+            (tasks.filter((t) => t.completed).length / tasks.length) * 100
+          )}%`,
+        }}
+      />
+    </div>
+  </div>
+)}
+
 
       {loading ? (
         <p className="text-center text-gray-400">Check me on GitHub @reth0608</p>
@@ -131,11 +150,28 @@ export default function Dashboard() {
 
                 if (filteredTasks.length === 0) return null;
 
+                const completedCount = topicTasks.filter((task) => task.completed).length;
+                const totalCount = topicTasks.length;
+                const progressPercent = Math.round((completedCount / totalCount) * 100);
+
                 return (
                   <section key={heading} id={`topic-${encodeURIComponent(heading)}`}>
-                    <h2 className="text-2xl font-bold mb-4 underline underline-offset-4">
-                      {heading}
-                    </h2>
+                    <h2 className="text-2xl font-bold mb-2 underline underline-offset-4">{heading}</h2>
+
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="text-sm text-white/70 mb-1">
+                        {completedCount} of {totalCount} tasks completed
+                      </div>
+                      <div className="w-full h-3 bg-white/20 rounded overflow-hidden">
+                        <div
+                          className="h-full bg-yellow-400 transition-all duration-300"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Task List */}
                     <ul className="space-y-3">
                       {filteredTasks.map((task) => (
                         <li
@@ -168,7 +204,7 @@ export default function Dashboard() {
   );
 }
 
-// 🔐 Secure this page server-side
+
 export async function getServerSideProps(context: any) {
   const { userId } = getAuth(context.req);
 
