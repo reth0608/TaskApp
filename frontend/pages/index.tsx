@@ -25,7 +25,7 @@ export default function Home() {
     setTasks([]);
 
     try {
-      const res = await fetch('http://localhost:5000/api/tasks', {
+      const res = await fetch('https://taskapp-zlu2.onrender.com/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
