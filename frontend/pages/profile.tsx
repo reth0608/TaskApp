@@ -20,7 +20,7 @@ export default function Profile() {
 
     const fetchTasks = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/tasks?userId=${user.id}`);
+        const res = await fetch(`https://taskapp-zlu2.onrender.com/api/tasks?userId=${user.id}`);
         const data = await res.json();
         if (!data.tasks || !Array.isArray(data.tasks)) return;
 
