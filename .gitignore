@@ -1,0 +1,14 @@
+#node modules
+backend/node_modules
+frontend/node_modules
+
+#env
+backend/.env
+frontend/.env.local
+frontend/next-env.d.ts
+
+#drizzle
+backend/drizzle
+
+#next
+frontend/.next
