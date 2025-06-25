@@ -1,4 +1,5 @@
-import { useUser } from '@clerk/nextjs';
+import { useUser, useClerk } from '@clerk/nextjs';
+import { getAuth } from '@clerk/nextjs/server';
 import { useEffect, useState } from 'react';
 
 type Task = {
@@ -10,6 +11,7 @@ type Task = {
 
 export default function Profile() {
   const { user, isLoaded } = useUser();
+  const { signOut } = useClerk();
   const [headings, setHeadings] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +45,13 @@ export default function Profile() {
 
   return (
     <main className="min-h-screen bg-zinc-900 text-white p-6">
+      <button
+        onClick={() => signOut()}
+        className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md absolute top-6 right-6"
+      >
+        Logout
+      </button>
+
       <div className="max-w-3xl mx-auto space-y-10">
         <h1 className="text-3xl font-extrabold text-center mb-2">Your Profile</h1>
         <div className="bg-white/10 p-6 rounded-xl shadow-md">
@@ -50,7 +59,13 @@ export default function Profile() {
             <span className="font-semibold">Name:</span> {user?.fullName}
           </p>
           <p className="text-lg">
-            <span className="font-semibold">Email:</span> {user?.primaryEmailAddress?.emailAddress[0]+user?.primaryEmailAddress?.emailAddress[1]+"x".repeat(user?.primaryEmailAddress?.emailAddress.length-14)+user?.primaryEmailAddress?.emailAddress.slice(-12)}
+            <span className="font-semibold">Email:</span>{" "}
+            {user?.primaryEmailAddress?.emailAddress[0] +
+              user?.primaryEmailAddress?.emailAddress[1] +
+              "x".repeat(
+                user?.primaryEmailAddress?.emailAddress.length - 14
+              ) +
+              user?.primaryEmailAddress?.emailAddress.slice(-12)}
           </p>
         </div>
 
@@ -82,4 +97,20 @@ export default function Profile() {
       </div>
     </main>
   );
+}
+
+// 🔐 Protect the route server-side
+export async function getServerSideProps(context: any) {
+  const { userId } = getAuth(context.req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }

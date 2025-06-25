@@ -1,4 +1,5 @@
 import { useUser } from '@clerk/nextjs';
+import { getAuth } from '@clerk/nextjs/server';
 import { useEffect, useState } from 'react';
 
 type Task = {
@@ -165,4 +166,20 @@ export default function Dashboard() {
       )}
     </main>
   );
+}
+
+// 🔐 Secure this page server-side
+export async function getServerSideProps(context: any) {
+  const { userId } = getAuth(context.req);
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/sign-in',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }
