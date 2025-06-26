@@ -85,6 +85,9 @@ export default function Home() {
       <p className="text-white/80 mb-8 text-center max-w-lg">
         Generate actionable tasks to master anything. Just type a topic and start learning!
       </p>
+      <p>
+        If this is your first time using in a while, please wait for a bit. Thanks!
+      </p>
       <div className="fixed top-8 right-8 z-50">
   <a
     href="/profile"
