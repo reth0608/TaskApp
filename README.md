@@ -9,5 +9,7 @@ Backend: Node.js, Express.js and Drizzle ORM
 Database: PostgreSQL via neon.tech
 API: Gemini 1.5 flask
 
+Frontend: https://assignmenttaskapp.netlify.app/
+
 Clone the repo:
 git clone https://github.com/reth0608/TaskApp.git
